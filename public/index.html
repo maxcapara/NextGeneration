@@ -31,6 +31,9 @@
     img {
       width: 75%;
       height: auto;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
     }
     .loader {
       border: 16px solid #f3f3f3;
@@ -66,14 +69,18 @@
       width:auto;
       height:75%;
     }
+    #inner {
+      display: table;
+      margin: 0 auto;
+
   </style>
 </head>
 <body >
-<center>
+
 <img src="../dist/img/NextGeneration.png"  ><br>
   <img src="../dist/img/nextGenerationLogo.png" class="image1" >
-  <h2>Bienvenid@s!!</h2>
-  <div class="loader"></div>
+  <h2 style="text-align: center;">Bienvenid@s!!</h2>
+  <div class="loader" align="center" id="inner" ></div>
 </br>
 <meta http-equiv="Refresh" content="5;login.html">
   <footer class="footer">

@@ -39,6 +39,9 @@
     img {
       width: 75%;
       height: auto;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
     }
     .loader {
       border: 16px solid #f3f3f3;
@@ -83,81 +86,24 @@
           messagingSenderId: "966721066481"
       };
       firebase.initializeApp(config);
-  </script>
-  <script>
-      console.log('11111111111');      // This is called with the results from from FB.getLoginStatus().
-      function statusChangeCallback(response) {
-          console.log('statusChangeCallback');
-          console.log(response);
-          // The response object is returned with a status field that lets the
-          // app know the current login status of the person.
-          // Full docs on the response object can be found in the documentation
-          // for FB.getLoginStatus().
-          if (response.status === 'connected') {
-              // Logged into your app and Facebook.
-              testAPI();
-          } else {
-              // The person is not logged into your app or we are unable to tell.
-              document.getElementById('status').innerHTML = 'Please log ' +
-                  'into this app.';
-          }
-      }
-      // Load the SDK asynchronously
-      (function(d, s, id) {
+      window.fbAsyncInit = function() {
+          FB.init({
+              appId            : '1853124638088705',
+              autoLogAppEvents : true,
+              xfbml            : true,
+              version          : 'v3.0'
+          });
+      };
+      (function(d, s, id){
           var js, fjs = d.getElementsByTagName(s)[0];
-          if (d.getElementById(id)) return;
+          if (d.getElementById(id)) {return;}
           js = d.createElement(s); js.id = id;
           js.src = "https://connect.facebook.net/en_US/sdk.js";
           fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));
 
-      // Here we run a very simple test of the Graph API after login is
-      // successful.  See statusChangeCallback() for when this call is made.
-      function testAPI() {
-          console.log('Welcome!  Fetching your information.... ');
-          FB.api('/me', function(response) {
-              console.log('Successful login for: ' + response.name);
-              document.getElementById('status').innerHTML =
-                  'Thanks for logging in, ' + response.name + '!';
-          });
-      }
-
-      // This function is called when someone finishes with the Login
-      // Button.  See the onlogin handler attached to it in the sample
-      // code below.
-      function checkLoginState() {
-          FB.getLoginStatus(function(response) {
-              statusChangeCallback(response);
-          });
-      }
-
-      window.fbAsyncInit = function() {
-          FB.init({
-              appId      : '1853124638088705',
-              cookie     : true,  // enable cookies to allow the server to access
-                                  // the session
-              xfbml      : true,  // parse social plugins on this page
-              version    : 'v3.0' // use graph api version 2.8
-          });
-
-          // Now that we've initialized the JavaScript SDK, we call
-          // FB.getLoginStatus().  This function gets the state of the
-          // person visiting this page and can return one of three states to
-          // the callback you provide.  They can be:
-          //
-          // 1. Logged into your app ('connected')
-          // 2. Logged into Facebook, but not your app ('not_authorized')
-          // 3. Not logged into Facebook and can't tell if they are logged into
-          //    your app or not.
-          //
-          // These three cases are handled in the callback function.
-
-          FB.getLoginStatus(function(response) {
-              statusChangeCallback(response);
-          });
-
-      };
-
+  </script>
+  <script>
       function callGoogleSignIn(){
           var provider = new firebase.auth.GoogleAuthProvider();
           firebase.auth().signInWithPopup(provider).then(function(result) {
@@ -165,7 +111,17 @@
               var token = result.credential.accessToken;
               // The signed-in user info.
               var user = result.user;
-              // ...
+              if (typeof(Storage) !== "undefined") {
+                  // Store
+                  localStorage.setItem("displayName", result.user.displayName);
+                  localStorage.setItem("email", result.user.email);
+                  localStorage.setItem("photoURL", result.user.photoURL);
+                  // Retrieve
+                 document.getElementById("result").innerHTML ="Operacion exitosa";
+              } else {
+                  document.getElementById("result").innerHTML = "Lo sentimos, su navegador no es compatible con Web Storage...";
+              }
+              window.location.href = "index2.html";
           }).catch(function(error) {
               // Handle Errors here.
               var errorCode = error.code;
@@ -175,65 +131,82 @@
               // The firebase.auth.AuthCredential type that was used.
               var credential = error.credential;
               // ...
-          });
-      }
-
-      function onSignIn(googleUser) {
-          var profile = googleUser.getBasicProfile();
-          console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-          console.log('Name: ' + profile.getName());
-          console.log('Image URL: ' + profile.getImageUrl());
-          console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-      }
-
-      console.log(11111111111);
-      private void handleFacebookAccessToken(AccessToken token) {
-          Log.d(TAG, "handleFacebookAccessToken:" + token);
-
-          AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-          mAuth.signInWithCredential(credential)
-              .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-          @Override
-              public void onComplete(@NonNull Task<AuthResult> task) {
-                  if (task.isSuccessful()) {
-                      console.log(11111111111);
-                      // Sign in success, update UI with the signed-in user's information
-                      Log.d(TAG, "signInWithCredential:success");
-                      FirebaseUser user = mAuth.getCurrentUser();
-                      updateUI(user);
-                  } else {
-                      // If sign in fails, display a message to the user.
-                      Log.w(TAG, "signInWithCredential:failure", task.getException());
-                      Toast.makeText(FacebookLoginActivity.this, "Authentication failed.",
-                          Toast.LENGTH_SHORT).show();
-                      updateUI(null);
-                  }
-
-                  // ...
-              }
+              window.alert("Error" + errorCode + error.message );
           });
       }
   </script>
 </head>
 <body class="hold-transition sidebar-mini">
-<center>
-<img src="../dist/img/NextGenerationMasLogo.png" width="460" height="345" >
-</center>
-<a href="#" onclick="signOut();">Sign out</a>
 <script>
-    function signOut() {
-        var auth2 = gapi.auth2.getAuthInstance();
-        auth2.signOut().then(function () {
-            console.log('User signed out.');
+    // This is called with the results from from FB.getLoginStatus().
+    function statusChangeCallback(response) {
+        console.log('statusChangeCallback');
+        console.log(response);
+        if (response.status === 'connected') {
+            // Logged into your app and Facebook.
+            testAPI();
+        } else {
+            // The person is not logged into your app or we are unable to tell.
+            document.getElementById('status').innerHTML = 'Please log ' +
+                'into this app.';
+        }
+    }
+    function checkLoginState() {
+        FB.getLoginStatus(function(response) {
+            statusChangeCallback(response);
+        });
+    }
+
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId      : '1853124638088705',
+            cookie     : true,  // enable cookies to allow the server to access
+                                // the session
+            xfbml      : true,  // parse social plugins on this page
+            version    : 'v3.0' // use graph api version 2.8
+        });
+    };
+
+    // Load the SDK asynchronously
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    function testAPI() {
+        console.log('Welcome!  Fetching your information.... ');
+        FB.api('/me', function(response) {
+            console.log(response);
+            localStorage.setItem("displayName", response.name);
+            localStorage.setItem("email", response.email);
+            localStorage.setItem("photoURL", "https://graph.facebook.com/" + response.id + "/picture?height=500");
+            console.log('Successful login for: ' + response.name);
+           window.location.href = "index2.html";
+
         });
     }
 </script>
+<script>
+    function callMailSignIn(){
+
+var email = document.getElementById("login-username").value+"@unla.com.ar";
+var password =document.getElementById("login-password").value;
+
+firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+console.log(error.code);
+console.log(error.message);
+});
+    }
+</script>
+<img src="../dist/img/NextGenerationMasLogo.png" width="460" height="345"  style="margin: auto;">
 <div class="container" align="center">
   <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
     <div class="panel panel-info" >
       <div class="panel-heading">
         <div class="panel-title">Sign In</div>
-        <div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="maxi.html">Forgot password?</a></div>
+        <div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="#">Forgot password?</a></div>
       </div>
 
       <div style="padding-top:30px" class="panel-body" >
@@ -256,28 +229,16 @@
 
 
 
-
-          <div style="margin-top:10px" class="form-group" >
+          <div style="margin-top:10px" class="form-group">
             <!-- Button -->
 
-            <div class="col-sm-12 controls" >
-              <a id="btn-login" href="#" class="btn btn-success">Ingresar  </a>
-
+            <div class="col-sm-12 controls">
+              <a id="btn-login" href="#" class="btn btn-success">Login  </a>
             </div>
           </div>
 
 
-          <div class="input-group" align="left">
-            <div class="checkbox">
-              <label>
-                <input id="login-remember" type="checkbox" name="remember" value="1"> Remember me
-              </label>
-
-            </div>
-
-          </div>
           <div class="form-group">
-
             <div class="col-md-12 control">
               <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
                 Don't have an account!
@@ -287,12 +248,8 @@
               </div>
             </div>
           </div>
-
-          <fb:login-button
-                  scope="public_profile,email"
-                  onlogin="checkLoginState();">
-          </fb:login-button>
-          <div class="g-signin2" data-onsuccess="onSignIn"></div>
+          <div class="fb-login-button" data-max-rows="1" data-size="small" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" onlogin="checkLoginState();"></div>
+          <div class="g-signin2" data-width="150px" data-height="20px" data-longtitle="true"  style="margin: 10px; padding: 5px;"  onclick=callGoogleSignIn()></div>
         </form>
 
 
@@ -303,7 +260,7 @@
   <div id="signupbox" style="display:none; margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
     <div class="panel panel-info">
       <div class="panel-heading">
-        <div class="panel-title">Sign Up</div>
+        <div class="panel-title">Usuario invitado</div>
         <div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" href="#" onclick="$('#signupbox').hide(); $('#loginbox').show()">Sign In</a></div>
       </div>
       <div class="panel-body" >
@@ -317,121 +274,41 @@
 
 
           <div class="form-group">
-            <label for="email" class="col-md-3 control-label">Email</label>
+            <label for="usuario" class="col-md-3 control-label">Usuario</label>
             <div class="col-md-9">
-              <input type="text" class="form-control" name="email" placeholder="Email Address">
+              <input type="text" class="form-control" name="usuario" placeholder="Usuario">
             </div>
           </div>
-
-          <div class="form-group">
-            <label for="firstname" class="col-md-3 control-label">First Name</label>
-            <div class="col-md-9">
-              <input type="text" class="form-control" name="firstname" placeholder="First Name">
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="lastname" class="col-md-3 control-label">Last Name</label>
-            <div class="col-md-9">
-              <input type="text" class="form-control" name="lastname" placeholder="Last Name">
-            </div>
-          </div>
-          <div class="form-group">
+            <div class="form-group">
             <label for="password" class="col-md-3 control-label">Password</label>
             <div class="col-md-9">
               <input type="password" class="form-control" name="passwd" placeholder="Password">
             </div>
           </div>
-
-          <div class="form-group">
-            <label for="icode" class="col-md-3 control-label">Invitation Code</label>
-            <div class="col-md-9">
-              <input type="text" class="form-control" name="icode" placeholder="">
+            <div class="form-group">
+                <label for="password" class="col-md-3 control-label">Password</label>
+                <div class="col-md-9">
+                    <input type="password" class="form-control" name="passwd" placeholder="Password">
+                </div>
             </div>
-          </div>
+
 
           <div class="form-group">
             <!-- Button -->
             <div class="col-md-offset-3 col-md-9">
-              <button id="btn-signup" type="button" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp Sign Up</button>
-              <span style="margin-left:8px;">or</span>
+              <button id="btn-signup" type="button" class="btn btn-info"><i class="icon-hand-right"></i>Crear Cuenta</button>
+              <span style="margin-left:8px;">
             </div>
           </div>
 
-          <div style="border-top: 1px solid #999; padding-top:20px"  class="form-group">
 
-            <div class="col-md-offset-3 col-md-9">
 
-              <fb:login-button
-                      scope="public_profile,email"
-                      onlogin="checkLoginState();">
-              </fb:login-button>
-            </div>
 
-          </div>
-
-          <div id="fb-root"></div>
-          <script>(function(d, s, id) {
-              var js, fjs = d.getElementsByTagName(s)[0];
-              if (d.getElementById(id)) return;
-              js = d.createElement(s); js.id = id;
-              js.src = 'https://connect.facebook.net/es_LA/sdk.js#xfbml=1&version=v3.0&appId=1853124638088705&autoLogAppEvents=1';
-              fjs.parentNode.insertBefore(js, fjs);
-          }(document, 'script', 'facebook-jssdk'));</script>
-          <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"></div>
-         </form>
+        </form>
       </div>
     </div>
-
-
-
-
   </div>
 </div>
-  <footer class="footer">
-    <strong>Copyright &copy; 2018 -Maximiliano Axel Capará </a>.</strong>
-    <br>All rights reserved.</br>
-    <b>Version</b> 1.0</br>
-    <div class="float-right d-none d-sm-inline-block">
-    </div>
-  </footer>
-
-<!-- jQuery -->
-<script src="../plugins/jquery/jquery.min.js"></script>
-<!-- jQuery UI 1.11.4 -->
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<script>
-    $.widget.bridge('uibutton', $.ui.button)
-</script>
-<!-- Bootstrap 4 -->
-<script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- Morris.js charts -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-<script src="../plugins/morris/morris.min.js"></script>
-<!-- Sparkline -->
-<script src="../plugins/sparkline/jquery.sparkline.min.js"></script>
-<!-- jvectormap -->
-<script src="../plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
-<script src="../plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-<!-- jQuery Knob Chart -->
-<script src="../plugins/knob/jquery.knob.js"></script>
-<!-- daterangepicker -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
-<script src="../plugins/daterangepicker/daterangepicker.js"></script>
-<!-- datepicker -->
-<script src="../plugins/datepicker/bootstrap-datepicker.js"></script>
-<!-- Bootstrap WYSIHTML5 -->
-<script src="../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
-<!-- Slimscroll -->
-<script src="../plugins/slimScroll/jquery.slimscroll.min.js"></script>
-<!-- FastClick -->
-<script src="../plugins/fastclick/fastclick.js"></script>
-<!-- AdminLTE App -->
-<script src="../dist/js/adminlte.js"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="../dist/js/pages/dashboard.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="../dist/js/demo.js"></script>
 </body>
 </html>
 

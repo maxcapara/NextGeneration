@@ -151,14 +151,20 @@
     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+
         <div class="image">
-          <img src="../dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+          <img id="myImgAvatar" class="img-circle elevation-2" alt="User Image" src="../dist/img/user3-128x128.jpg">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Maximiliano Capará</a>
+          <a href="#" class="d-block" id="displayName"></a>
         </div>
       </div>
-
+      <script>
+          console.log(localStorage.getItem("photoURL"));
+          document.getElementById("myImgAvatar").src = localStorage.getItem("photoURL");
+          document.getElementById("displayName").innerHTML = localStorage.getItem("displayName");
+          console.log(localStorage.getItem("fin"));
+      </script>
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
