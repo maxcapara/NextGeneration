@@ -31,11 +31,12 @@
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
   <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-
+  <script src="../plugins/BlockUI/blockUI.js"></script>
   <script src="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.js"></script>
   <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css" />
   <script src="https://apis.google.com/js/platform.js" async defer></script>
   <style>
+
     img {
       width: 75%;
       height: auto;
@@ -73,8 +74,10 @@
       text-align: center;
 
     }
-  </style>
+   </style>
   <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-firestore.js"></script>
   <script>
       // Initialize Firebase
       var config = {
@@ -111,18 +114,44 @@
               var token = result.credential.accessToken;
               // The signed-in user info.
               var user = result.user;
-              if (typeof(Storage) !== "undefined") {
-                  // Store
-                  localStorage.setItem("displayName", result.user.displayName);
-                  localStorage.setItem("email", result.user.email);
-                  localStorage.setItem("photoURL", result.user.photoURL);
-                  // Retrieve
-                 document.getElementById("result").innerHTML ="Operacion exitosa";
-              } else {
-                  document.getElementById("result").innerHTML = "Lo sentimos, su navegador no es compatible con Web Storage...";
+              grabarEnStorageLocal("OrigenLogin",obtenerObjStorageLocal("PARAMETROS").socialMail);
+              console.log(result.user);
+              var nickname   = "id_gmail"+result.user.providerData[0].uid;
+              console.log(nickname);
+              console.log("fin");
+              buscarEnTablaTraductora(nickname);
+              if (obtenerStorageLocal("estado")!="nuevo") {
+                  setTimeout(function afterTwoSeconds() {
+                      console.log(obtenerStorageLocal("estado"));
+                      if (obtenerStorageLocal("estado") == "activo") {
+                          console.log("si");
+                          pushNotification("Bienvenido");
+                          obtenetPerfil(obtenerStorageLocal("nickname"));
+                          setTimeout(function afterTwoSeconds() {
+                              if (obtenerObjStorageLocal("Usuario").rol == "Admin") {
+                                         window.location.href = obtenerObjStorageLocal("PANTALLAS").mainAdmin;
+                              } else {
+                                  console.log(obtenerObjStorageLocal("PANTALLAS").mainAdmin);
+                                  window.location.href = obtenerObjStorageLocal("PANTALLAS").mainUser;
+                              }
+                          },2000)
+                      }
+                      if (obtenerStorageLocal("estado")=="inactivo"){
+                          pushNotification("Usuario Bloqueado");
+                      }
+                      if (obtenerStorageLocal("estado")=="nuevo"){
+                          grabarEnStorageLocal("id_gmail","id_gmail"+ result.user.providerData[0].uid);
+                          grabarEnStorageLocal("photoURL",result.user.photoURL);
+                          grabarEnStorageLocal("displayName", result.user.providerData[0].displayName);
+                          console.log(result.user);
+                          pushNotification("Debe darse de alta");
+                          armarRegistracion();
+                          document.getElementById("register").click();
+                      }
+                  }, 2000)
               }
-              window.location.href = "index2.html";
-          }).catch(function(error) {
+
+            }).catch(function(error) {
               // Handle Errors here.
               var errorCode = error.code;
               var errorMessage = error.message;
@@ -131,24 +160,21 @@
               // The firebase.auth.AuthCredential type that was used.
               var credential = error.credential;
               // ...
-              window.alert("Error" + errorCode + error.message );
+              pushNotification("Error\" + errorCode + error.message ");
           });
       }
+      // Initialize Cloud Firestore through Firebase
+      var db = firebase.firestore();
   </script>
 </head>
 <body class="hold-transition sidebar-mini">
 <script>
     // This is called with the results from from FB.getLoginStatus().
     function statusChangeCallback(response) {
-        console.log('statusChangeCallback');
-        console.log(response);
         if (response.status === 'connected') {
-            // Logged into your app and Facebook.
             testAPI();
         } else {
-            // The person is not logged into your app or we are unable to tell.
-            document.getElementById('status').innerHTML = 'Please log ' +
-                'into this app.';
+            pushNotification("Por favor ingrese con la aplicacion");
         }
     }
     function checkLoginState() {
@@ -175,38 +201,324 @@
         js.src = "https://connect.facebook.net/en_US/sdk.js";
         fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
+
     function testAPI() {
         console.log('Welcome!  Fetching your information.... ');
         FB.api('/me', function(response) {
-            console.log(response);
-            localStorage.setItem("displayName", response.name);
-            localStorage.setItem("email", response.email);
-            localStorage.setItem("photoURL", "https://graph.facebook.com/" + response.id + "/picture?height=500");
-            console.log('Successful login for: ' + response.name);
-           window.location.href = "index2.html";
+            grabarEnStorageLocal("OrigenLogin",obtenerObjStorageLocal("PARAMETROS").socialFace);
+            buscarEnTablaTraductora("id_facebook"+response.id);
+            if (obtenerStorageLocal("estado")!="nuevo") {
+                console.log('Successful login for: ' + response.name);
+                setTimeout(function afterTwoSeconds() {
+                    console.log(obtenerStorageLocal("estado"));
+                    if (obtenerStorageLocal("estado") == "activo") {
+                        console.log("si",obtenerStorageLocal("estado"));
+                       // pushNotification("Bienvenido");
+                        obtenetPerfil(obtenerStorageLocal("nickname"));
+                        setTimeout(function afterTwoSeconds() {
+                            if (obtenerObjStorageLocal("Usuario").rol == "Admin") {
+                                console.log(obtenerObjStorageLocal("PANTALLAS").mainAdmin);
+                                window.location.href = obtenerObjStorageLocal("PANTALLAS").mainAdmin;
+                            } else {
+                                console.log(obtenerObjStorageLocal("PANTALLAS").mainAdmin);
+                                window.location.href = obtenerObjStorageLocal("PANTALLAS").mainUser;
+                            }
+                        },2000)
+                    }if (obtenerStorageLocal("estado")=="inactivo"){
+                        pushNotification("Usuario Bloqueado");
+                    }
+                    if (obtenerStorageLocal("estado")=="nuevo"){
+                        grabarEnStorageLocal("id_facebook","id_facebook"+response.id);
+                        grabarEnStorageLocal("photoURL","https://graph.facebook.com/" + response.id + "/picture?height=500");
+                        grabarEnStorageLocal("displayName",response.name);
+                        pushNotification("Debe darse de alta");
+                        document.getElementById("register").click();
+                        console.log(response);
+                        armarRegistracion();
+                    }
+                }, 2000)
+            }else{
+                pushNotification("Debe darse de alta");
+                // TODO: grabar las variables necesarias para el redireccionamiento
+            }
 
         });
     }
 </script>
 <script>
-    function callMailSignIn(){
-
-var email = document.getElementById("login-username").value+"@unla.com.ar";
-var password =document.getElementById("login-password").value;
-
-firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-console.log(error.code);
-console.log(error.message);
-});
+    function crearUsuarioFirebase(email,password) {
+        firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // ...
+            console.log(error.code);
+            console.log(error.message);
+            if (error.code=="auth/email-already-in-use") {
+                console.log("El usuario ya se encuentra en uso, intente con otro.");
+            }
+            if (error.code=="auth/weak-password"){
+                    console.log("La clave es corta");
+            }
+        });
     }
+    function callMailSignIn(){
+        var email = document.getElementById("login-username").value;
+        var password =document.getElementById("login-password").value;
+        blockearPantalla();
+        if (email!="" || password!=""){
+            var x = email;
+            var atpos = x.indexOf("@");
+            var dotpos = x.lastIndexOf(".");
+            if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length) {
+                email=email+"@unla.com.ar";
+            }
+                firebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
+                    console.log(error.code);
+                    console.log(error.message);
+                    grabarEnStorageLocal("Error","Login");
+                    pushNotification("Error Usuario o Password invalido");
+                    console.log("Error Usuario o Password invalido");
+
+                });
+            setTimeout(function afterTwoSeconds() {
+            if (obtenerStorageLocal("Error")!="Login"){
+                grabarEnStorageLocal("OrigenLogin",obtenerObjStorageLocal("PARAMETROS").mailPass);
+                 var nickname   = email;
+                buscarEnTablaTraductora(nickname);
+                setTimeout(function afterTwoSeconds() {
+                   console.log(obtenerStorageLocal("estado"));
+                   if (obtenerStorageLocal("estado") == "activo") {
+                      console.log("si");
+                      pushNotification("Bienvenido");
+                      obtenetPerfil(obtenerStorageLocal("nickname"));
+                      setTimeout(function afterTwoSeconds() {
+                        if (obtenerObjStorageLocal("Usuario").rol == "Admin") {
+                            console.log(obtenerObjStorageLocal("PANTALLAS").mainAdmin);
+                            window.location.href = obtenerObjStorageLocal("PANTALLAS").mainAdmin;
+                        } else {
+                            console.log(obtenerObjStorageLocal("PANTALLAS").mainAdmin);
+                            window.location.href = obtenerObjStorageLocal("PANTALLAS").mainUser;
+                        }
+                      }, 2000)
+                   }
+                   if (obtenerStorageLocal("estado") == "inactivo") {
+                       pushNotification("Usuario Bloqueado");
+                   }
+
+
+             }, 2000)
+            }else{
+                pushNotification("Error Usuario o Password invalido");
+            }
+            }, 2000)
+        }else{
+            pushNotification("Error debe ingresar usuario y password");
+            console.log("Error debe ingresar usuario y password");
+        }
+
+    }
+    function goHome() {
+        window.location.href ="index.html";
+    }
+    function obtenerObjStorageLocal(x){
+        var myObj= JSON.parse(localStorage.getItem(x));
+        return myObj;
+    }
+    function obtenerStorageLocal(x){
+        return localStorage.getItem(x);
+    }
+    function grabarEnStorageLocal(nombreV,valor) {
+        var resultado;
+        if (typeof(Storage) !== "undefined") {
+            // Store
+            localStorage.setItem(nombreV, valor);
+            // Retrieve
+            resultado ="Operacion exitosa";
+        } else {
+            resultado= "Lo sentimos, su navegador no es compatible con Web Storage...";
+        }
+        return resultado;
+    }
+    function buscarEnTablaTraductora(nickname) {
+        console.log("ss",nickname);
+        var docRef = db.collection("TRADUCTORA").doc(nickname) ;
+        docRef.get().then(function(doc) {
+            if (doc.exists) {
+                if (doc.data().activo==1){
+                    grabarEnStorageLocal("estado","activo");
+                    grabarEnStorageLocal("nickname",doc.data().nickname);
+                }else{
+                    grabarEnStorageLocal("estado","inactivo");
+                }
+
+            } else {
+                console.log("Ocurrio un error!");
+                grabarEnStorageLocal("estado","nuevo");
+            }
+
+        }).catch(function(error) {
+            grabarEnStorageLocal("estado","nuevo");
+            console.log("Error getting document:", error);
+        })
+
+    }
+    function obtenetPerfil(nickname) {
+        console.log(nickname);
+        var docRef = db.collection("Usuarios").doc(nickname) ;
+        docRef.get().then(function(doc) {
+            if (doc.exists) {
+                grabarEnStorageLocal("Usuario",JSON.stringify(doc.data()));
+            } else {
+                console.log("Ocurrio un error!");
+            }
+
+        }).catch(function(error) {
+            console.log("Error getting document:", error);
+        })
+
+    }
+    function armarRegistracion(){
+        if (obtenerStorageLocal("OrigenLogin")=="facebook"|| obtenerStorageLocal("OrigenLogin")=="gmail"){
+            document.getElementById("passwd").style.display = "none";
+        }else{
+            document.getElementById("passwd").style.display = "block";
+        }
+    }
+    function crearUsuario(){
+
+        var x = document.getElementById("mail").value;
+        var atpos = x.indexOf("@");
+        var dotpos = x.lastIndexOf(".");
+        if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length) {
+          document.getElementById('mail').style.borderColor = "red";
+          document.getElementById("mail").focus();
+          pushNotification("Mail invalido");
+        }else{
+            console.log("alta usuario");
+
+            if (obtenerStorageLocal("OrigenLogin") == "facebook") {
+                if (document.getElementById("usuario").value != "" || document.getElementById("mail").value != "") {
+                    var stringJsonUser = {
+                        nickname: document.getElementById("usuario").value,
+                        mail: document.getElementById("mail").value,
+                        displayName: document.getElementById("displayName").value,
+                        photoURL: obtenerStorageLocal("photoURL"),
+                        rol: "user"
+                    };
+                    var stringJsonTraductora = {
+                        nickname: document.getElementById("usuario").value,
+                        activo: 1
+                    };
+                    agregarUsuario(document.getElementById("usuario").value, stringJsonUser);
+                    crearUsuarioFirebase(document.getElementById("mail").value, obtenerObjStorageLocal("PARAMETROS").claveDefecto);
+                    grabarEnTraductora(obtenerStorageLocal("id_facebook"), stringJsonTraductora);
+                    pushNotification("Registro exitoso!");
+                    console.log(document.getElementById("signinlink"));
+                    borrarCampos();
+                    document.getElementById("signinlink").click();
+                } else {
+                    pushNotification("Debe completar los campos");
+                }
+
+            } else if (obtenerStorageLocal("OrigenLogin") == "gmail") {
+                if (document.getElementById("usuario").value != "" || document.getElementById("mail").value != "") {
+                    var stringJsonUser = {
+                        nickname: document.getElementById("usuario").value,
+                        mail: document.getElementById("mail").value,
+                        displayName: obtenerStorageLocal("displayName"),
+                        photoURL: obtenerStorageLocal("photoURL"),
+                        rol: "user"
+                    };
+                    var stringJsonTraductora = {
+                        nickname: document.getElementById("usuario").value,
+                        activo: 1
+                    };
+                    agregarUsuario(document.getElementById("usuario").value, stringJsonUser);
+                    crearUsuarioFirebase(document.getElementById("mail").value, obtenerObjStorageLocal("PARAMETROS").claveDefecto);
+                    grabarEnTraductora(obtenerStorageLocal("id_gmail"), stringJsonTraductora);
+                    pushNotification("Registro exitoso!");
+                    console.log(document.getElementById("signinlink"));
+                    borrarCampos();
+                    document.getElementById("signinlink").click();
+                } else {
+                    pushNotification("Debe completar los campos");
+                }
+
+            } else {
+                if (document.getElementById("usuario").value != "" || document.getElementById("mail").value != "" || document.getElementById("password").value != "") {
+                    var stringJsonUser = {
+                        nickname: document.getElementById("usuario").value,
+                        mail: document.getElementById("mail").value,
+                        displayName: document.getElementById("usuario").value,
+                        photoURL: "../../dist/img/sinFoto.jpg",
+                        rol: "user"
+                    };
+                    var stringJsonTraductoraUser = {
+                        nickname: document.getElementById("usuario").value,
+                        activo: 1
+                    };
+                    var stringJsonTraductoraMail = {
+                        nickname: document.getElementById("usuario").value,
+                        activo: 1
+                    };
+                    agregarUsuario(document.getElementById("usuario").value, stringJsonUser);
+                    if ((document.getElementById("password").value).length <= 6) {
+                        crearUsuarioFirebase(document.getElementById("mail").value, obtenerObjStorageLocal("PARAMETROS").claveDefecto);
+                        crearUsuarioFirebase(document.getElementById("usuario").value+"@unla.com.ar", obtenerObjStorageLocal("PARAMETROS").claveDefecto);
+                    } else {
+                        crearUsuarioFirebase(document.getElementById("mail").value, document.getElementById("password").value);
+                        crearUsuarioFirebase(document.getElementById("usuario").value+"@unla.com.ar", document.getElementById("password").value);
+                    }
+                    grabarEnTraductora(document.getElementById("usuario").value+"@unla.com.ar", stringJsonTraductoraUser);
+                    grabarEnTraductora(document.getElementById("mail").value, stringJsonTraductoraMail);
+                    pushNotification("Registro exitoso!");
+                    console.log(document.getElementById("signinlink"));
+                    borrarCampos();
+                    document.getElementById("signinlink").click();
+                } else {
+                    pushNotification("Debe completar los campos");
+                }
+            }
+        }
+    }
+    function agregarUsuario(nickname,stringJsonUser){
+
+        db.collection("Usuarios").doc(nickname).set(stringJsonUser)
+        .then(function(docRef) {
+                console.log("Document written with ID: ", docRef);
+            })
+            .catch(function(error) {
+                console.error("Error adding document: ", error);
+            });
+
+    }
+    function grabarEnTraductora(nickname,stringJsonUser){
+        db.collection("TRADUCTORA").doc(nickname).set(stringJsonUser)
+            .then(function(docRef) {
+                console.log("Document written with ID: ", docRef);
+            })
+            .catch(function(error) {
+                console.error("Error adding document: ", error);
+            });
+
+    }
+    function borrarCampos(){
+        document.getElementById("usuario").value="";
+        document.getElementById("mail").value="";
+        document.getElementById("password").value="";
+        document.getElementById("login-username").value="";
+        document.getElementById("login-password").value="";
+    }
+
 </script>
-<img src="../dist/img/NextGenerationMasLogo.png" width="460" height="345"  style="margin: auto;">
+<img src="../dist/img/NextGenerationMasLogo.png" width="460" height="345"  style="margin: auto;" onclick=goHome()>
 <div class="container" align="center">
   <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
     <div class="panel panel-info" >
       <div class="panel-heading">
-        <div class="panel-title">Sign In</div>
-        <div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="#">Forgot password?</a></div>
+        <div class="panel-title">Ingreso</div>
+        <div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="#">recuperar clave</a></div>
       </div>
 
       <div style="padding-top:30px" class="panel-body" >
@@ -217,7 +529,7 @@ console.log(error.message);
 
           <div style="margin-bottom: 25px" class="input-group">
             <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-            <input id="login-username" type="text" class="form-control" name="username" value="" placeholder="username or email">
+            <input id="login-username" type="text" class="form-control" name="username" value="" placeholder="Usuario o mail">
           </div>
 
           <div style="margin-bottom: 25px" class="input-group">
@@ -233,7 +545,7 @@ console.log(error.message);
             <!-- Button -->
 
             <div class="col-sm-12 controls">
-              <a id="btn-login" href="#" class="btn btn-success">Login  </a>
+              <a id="btn-login" href="#" class="btn btn-success" onclick="callMailSignIn()">Login  </a>
             </div>
           </div>
 
@@ -241,9 +553,9 @@ console.log(error.message);
           <div class="form-group">
             <div class="col-md-12 control">
               <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
-                Don't have an account!
-                <a href="#" onClick="$('#loginbox').hide(); $('#signupbox').show()">
-                  Sign Up Here
+                ¡No tienes una cuenta!
+                <a href="#" onClick="$('#loginbox').hide(); $('#signupbox').show();" id="register">
+                  Registrate aquí
                 </a>
               </div>
             </div>
@@ -251,17 +563,14 @@ console.log(error.message);
           <div class="fb-login-button" data-max-rows="1" data-size="small" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" onlogin="checkLoginState();"></div>
           <div class="g-signin2" data-width="150px" data-height="20px" data-longtitle="true"  style="margin: 10px; padding: 5px;"  onclick=callGoogleSignIn()></div>
         </form>
-
-
-
       </div>
     </div>
   </div>
   <div id="signupbox" style="display:none; margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
     <div class="panel panel-info">
       <div class="panel-heading">
-        <div class="panel-title">Usuario invitado</div>
-        <div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" href="#" onclick="$('#signupbox').hide(); $('#loginbox').show()">Sign In</a></div>
+        <div class="panel-title">Nuevo Usuario</div>
+        <div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" href="#" onclick="$('#signupbox').hide(); $('#loginbox').show()">Ingreso</a></div>
       </div>
       <div class="panel-body" >
         <form id="signupform" class="form-horizontal" role="form">
@@ -274,30 +583,30 @@ console.log(error.message);
 
 
           <div class="form-group">
-            <label for="usuario" class="col-md-3 control-label">Usuario</label>
+          <label for="usuario" class="col-md-3 control-label">Usuario</label>
+          <div class="col-md-9">
+            <input type="text" class="form-control" name="usuario" placeholder="Usuario" id="usuario">
+          </div>
+        </div>
+          <div class="form-group">
+            <label for="mail" class="col-md-3 control-label">Mail</label>
             <div class="col-md-9">
-              <input type="text" class="form-control" name="usuario" placeholder="Usuario">
+              <input type="text" class="form-control" name="mail" placeholder="Mail" id="mail" pattern="/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/">
             </div>
           </div>
-            <div class="form-group">
-            <label for="password" class="col-md-3 control-label">Password</label>
+          <div class="form-group" id="passwd">
+            <label for="password" class="col-md-3 control-label" >Password</label>
             <div class="col-md-9">
-              <input type="password" class="form-control" name="passwd" placeholder="Password">
+              <input type="password" class="form-control" name="passwd" placeholder="Password" id="password" >
             </div>
           </div>
-            <div class="form-group">
-                <label for="password" class="col-md-3 control-label">Password</label>
-                <div class="col-md-9">
-                    <input type="password" class="form-control" name="passwd" placeholder="Password">
-                </div>
-            </div>
 
 
           <div class="form-group">
             <!-- Button -->
-            <div class="col-md-offset-3 col-md-9">
-              <button id="btn-signup" type="button" class="btn btn-info"><i class="icon-hand-right"></i>Crear Cuenta</button>
-              <span style="margin-left:8px;">
+            <span class="col-md-offset-3 col-md-9">
+              <button id="btn-signup" type="button" class="btn btn-info" onclick=crearUsuario()><i class="icon-hand-right"></i>Crear Cuenta</button>
+              <span style="margin-left:8px;"/>
             </div>
           </div>
 
@@ -311,6 +620,3 @@ console.log(error.message);
 </div>
 </body>
 </html>
-
-
-

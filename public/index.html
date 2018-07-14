@@ -27,6 +27,10 @@
   <link rel="stylesheet" href="../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+  <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-firestore.js"></script>
   <style>
     img {
       width: 75%;
@@ -72,11 +76,82 @@
     #inner {
       display: table;
       margin: 0 auto;
-
+    }
   </style>
 </head>
 <body >
+<script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyBnSMz4K89aaghwVikqC2Mjktb9vxKr-wI",
+        authDomain: "nextgeneration-c55c3.firebaseapp.com",
+        databaseURL: "https://nextgeneration-c55c3.firebaseio.com",
+        projectId: "nextgeneration-c55c3",
+        storageBucket: "nextgeneration-c55c3.appspot.com",
+        messagingSenderId: "966721066481"
+    };
+    firebase.initializeApp(config);
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId            : '1853124638088705',
+            autoLogAppEvents : true,
+            xfbml            : true,
+            version          : 'v3.0'
+        });
+    };
+    (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    // Initialize Cloud Firestore through Firebase
+    var db = firebase.firestore();
+    function grabarEnStorageLocal(nombreV,valor) {
+        var resultado;
+        if (typeof(Storage) !== "undefined") {
+            // Store
+            localStorage.setItem(nombreV, valor);
+            // Retrieve
+            resultado ="Operacion exitosa";
+        } else {
+            resultado= "Lo sentimos, su navegador no es compatible con Web Storage...";
+        }
+        return resultado;
+    }
+    function cargarParametros(){
+        var docRef = db.collection("PARAMETROS").doc("PARAMETRO") ;
 
+        docRef.get().then(function(doc) {
+            if (doc.exists) {
+                grabarEnStorageLocal("PARAMETROS",JSON.stringify(doc.data()));
+            } else {
+                console.log("Ocurrio un error!");
+            }
+            return doc.data().x;
+        }).catch(function(error) {
+            console.log("Error getting document:", error);
+        })
+    }
+    function cargarPantallas(){
+        var docRef = db.collection("PANTALLAS").doc("ALIAS") ;
+
+        docRef.get().then(function(doc) {
+            if (doc.exists) {
+                grabarEnStorageLocal("PANTALLAS",JSON.stringify(doc.data()));
+            } else {
+                console.log("Ocurrio un error!");
+            }
+            return doc.data().x;
+        }).catch(function(error) {
+            console.log("Error getting document:", error);
+        })
+    }
+    localStorage.clear();
+    cargarParametros();
+    cargarPantallas();
+</script>
 <img src="../dist/img/NextGeneration.png"  ><br>
   <img src="../dist/img/nextGenerationLogo.png" class="image1" >
   <h2 style="text-align: center;">Bienvenid@s!!</h2>
@@ -90,7 +165,7 @@
     <div class="float-right d-none d-sm-inline-block">
     </div>
   </footer>
-
+</body >
 <!-- jQuery -->
 <script src="../plugins/jquery/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
@@ -128,5 +203,5 @@
 <script src="../dist/js/pages/dashboard.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="../dist/js/demo.js"></script>
-</body>
+
 </html>
