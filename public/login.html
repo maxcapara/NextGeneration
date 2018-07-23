@@ -494,7 +494,61 @@
 
     }
     function grabarEnTraductora(nickname,stringJsonUser){
+        crearPendientes(nickname);
+        crearEstadisticas(nickname);
+        socialProfile(nickname);
         db.collection("TRADUCTORA").doc(nickname).set(stringJsonUser)
+            .then(function(docRef) {
+                console.log("Document written with ID: ", docRef);
+            })
+            .catch(function(error) {
+                console.error("Error adding document: ", error);
+            });
+
+    }
+    function crearPendientes(nickname){
+        var stringJsonUser = {
+            Trabajos: Math.floor(Math.random() * 10) + 1,
+            RedesSociales: Math.floor(Math.random() * 10) + 1,
+            Tareas: Math.floor(Math.random() * 10) + 1,
+            GruposActivos: Math.floor(Math.random() * 10) + 1,
+        };
+
+        db.collection("PENDIENTES").doc(nickname).set(stringJsonUser)
+            .then(function(docRef) {
+                console.log("Document written with ID: ", docRef);
+            })
+            .catch(function(error) {
+                console.error("Error adding document: ", error);
+            });
+
+    }
+    function crearEstadisticas(nickname){
+        var stringJsonUser = {
+            tareasCompletadas: Math.floor(Math.random() * 50) + 1,
+            Atiempo: Math.floor(Math.random() * 100) + 1,
+            Seguidores: Math.floor(Math.random() * 70) + 1,
+            Taprobados: Math.floor(Math.random() * 80) + 1
+        };
+
+        db.collection("ESTADISTICAS").doc(nickname).set(stringJsonUser)
+            .then(function(docRef) {
+                console.log("Document written with ID: ", docRef);
+            })
+            .catch(function(error) {
+                console.error("Error adding document: ", error);
+            });
+
+    }
+    function socialProfile(nickname){
+        var stringJsonUser = {
+            Ranking: Math.floor(Math.random() * 100) + 1,
+            puntos: Math.floor(Math.random() * 1000) + 1,
+            Recomendaciones: Math.floor(Math.random() * 100) + 1,
+
+        };
+
+        db.collection("ESTADISTICAS").doc(nickname).set(stringJsonUser)
             .then(function(docRef) {
                 console.log("Document written with ID: ", docRef);
             })
