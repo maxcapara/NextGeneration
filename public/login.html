@@ -128,11 +128,10 @@
                           pushNotification("Bienvenido");
                           obtenetPerfil(obtenerStorageLocal("nickname"));
                           setTimeout(function afterTwoSeconds() {
-                              if (obtenerObjStorageLocal("Usuario").rol == "Admin") {
-                                         window.location.href = obtenerObjStorageLocal("PANTALLAS").mainAdmin;
+                              if (obtenerObjStorageLocal("Usuario").rol == "admin") {
+                                window.location.href = obtenerObjStorageLocal("PANTALLAS").mainAdmin;
                               } else {
-                                  console.log(obtenerObjStorageLocal("PANTALLAS").mainAdmin);
-                                  window.location.href = obtenerObjStorageLocal("PANTALLAS").mainUser;
+                                 window.location.href = obtenerObjStorageLocal("PANTALLAS").mainAdmin;
                               }
                           },2000)
                       }
@@ -216,7 +215,7 @@
                        // pushNotification("Bienvenido");
                         obtenetPerfil(obtenerStorageLocal("nickname"));
                         setTimeout(function afterTwoSeconds() {
-                            if (obtenerObjStorageLocal("Usuario").rol == "Admin") {
+                            if (obtenerObjStorageLocal("Usuario").rol == "admin") {
                                 console.log(obtenerObjStorageLocal("PANTALLAS").mainAdmin);
                                 window.location.href = obtenerObjStorageLocal("PANTALLAS").mainAdmin;
                             } else {
@@ -293,7 +292,7 @@
                       pushNotification("Bienvenido");
                       obtenetPerfil(obtenerStorageLocal("nickname"));
                       setTimeout(function afterTwoSeconds() {
-                        if (obtenerObjStorageLocal("Usuario").rol == "Admin") {
+                        if (obtenerObjStorageLocal("Usuario").rol == "admin") {
                             console.log(obtenerObjStorageLocal("PANTALLAS").mainAdmin);
                             window.location.href = obtenerObjStorageLocal("PANTALLAS").mainAdmin;
                         } else {
