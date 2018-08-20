@@ -193,9 +193,9 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="./editarPerfil.html" class="nav-link">
+                <a href="verPerfil.html" class="nav-link">
                   <i class="fa fa-circle-o nav-icon"></i>
-                  <p>Editar Perfil</p>
+                  <p>Ver Perfil</p>
                 </a>
               </li>
               <li class="nav-item">
@@ -268,95 +268,105 @@
     <section class="content">
 
 
+      <!-- TO DO List -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">
+            <i class="ion ion-clipboard mr-1"></i>
+            Pendientes
+          </h3>
 
-            <!-- DIRECT CHAT -->
-            <div class="card direct-chat direct-chat-primary">
-              <div class="card-header">
-                <h3 class="card-title">Chat</h3>
-
-                <div class="card-tools">
-                  <span data-toggle="tooltip" title="3 New Messages" class="badge badge-primary">3</span>
-                  <button type="button" class="btn btn-tool" data-widget="collapse">
-                    <i class="fa fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn btn-tool" data-toggle="tooltip" title="Contacts"
-                          data-widget="chat-pane-toggle">
-                    <i class="fa fa-comments"></i>
-                  </button>
-                  <button type="button" class="btn btn-tool" data-widget="remove"><i class="fa fa-times"></i>
-                  </button>
-                </div>
+          <div class="card-tools">
+            <ul class="pagination pagination-sm">
+              <li class="page-item"><a href="#" class="page-link">&laquo;</a></li>
+              <li class="page-item"><a href="#" class="page-link">1</a></li>
+              <li class="page-item"><a href="#" class="page-link">2</a></li>
+              <li class="page-item"><a href="#" class="page-link">3</a></li>
+              <li class="page-item"><a href="#" class="page-link">&raquo;</a></li>
+            </ul>
+          </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+          <ul class="todo-list">
+            <li>
+              <!-- drag handle -->
+              <span class="handle">
+                      <i class="fa fa-ellipsis-v"></i>
+                      <i class="fa fa-ellipsis-v"></i>
+                    </span>
+              <!-- checkbox -->
+              <input type="checkbox" value="" name="">
+              <!-- todo text -->
+              <span class="text">Diseña un buen tema</span>
+              <!-- Emphasis label -->
+              <small class="badge badge-danger"><i class="fa fa-clock-o"></i> 2 mins</small>
+              <!-- General tools such as edit or delete-->
+              <div class="tools">
+                <i class="fa fa-edit"></i>
+                <i class="fa fa-trash-o"></i>
               </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <!-- Conversations are loaded here -->
-                <div class="direct-chat-messages">
-                  <!-- Message. Default to the left -->
-                  <div class="direct-chat-msg">
-                    <div class="direct-chat-info clearfix">
-                      <span class="direct-chat-name float-left">Maxi Pierce</span>
-                      <span class="direct-chat-timestamp float-right">23 Jan 2:00 pm</span>
-                    </div>
-                    <!-- /.direct-chat-info -->
-                    <img class="direct-chat-img" src="/../../dist/img/user1-128x128.jpg" alt="message user image">
-                    <!-- /.direct-chat-img -->
-                    <div class="direct-chat-text">
-                      Estamos haciendo un grupo increible!
-                    </div>
-                    <!-- /.direct-chat-text -->
-                  </div>
-                  <!-- /.direct-chat-msg -->
-
-                  <!-- Message to the right -->
-                  <div class="direct-chat-msg right">
-                    <div class="direct-chat-info clearfix">
-                      <span class="direct-chat-name float-right">Sarah Bullock</span>
-                      <span class="direct-chat-timestamp float-left">23 Jan 2:05 pm</span>
-                    </div>
-                    <!-- /.direct-chat-info -->
-                    <img class="direct-chat-img" src="../../dist/img/user3-128x128.jpg" alt="message user image">
-                    <!-- /.direct-chat-img -->
-                    <div class="direct-chat-text">
-                      Es genial!
-                    </div>
-                    <!-- /.direct-chat-text -->
-                  </div>
-                  <!-- /.direct-chat-msg -->
-
-                  <!-- Message. Default to the left -->
-                  <div class="direct-chat-msg">
-                    <div class="direct-chat-info clearfix">
-                      <span class="direct-chat-name float-left">Alexander Pierce</span>
-                      <span class="direct-chat-timestamp float-right">23 Jan 5:37 pm</span>
-                    </div>
-                    <!-- /.direct-chat-info -->
-                    <img class="direct-chat-img" src="../../dist/img/user1-128x128.jpg" alt="message user image">
-                    <!-- /.direct-chat-img -->
-                    <div class="direct-chat-text">
-                      Sigamos trabajando duro! al final del cuatrimestre veremos los resultados
-                    </div>
-                    <!-- /.direct-chat-text -->
-                  </div>
-                  <!-- /.direct-chat-msg -->
-
-                  <!-- Message to the right -->
-                  <div class="direct-chat-msg right">
-                    <div class="direct-chat-info clearfix">
-                      <span class="direct-chat-name float-right">Sarah Bullock</span>
-                      <span class="direct-chat-timestamp float-left">23 Jan 6:10 pm</span>
-                    </div>
-                    <!-- /.direct-chat-info -->
-                    <img class="direct-chat-img" src="../../dist/img/user3-128x128.jpg" alt="message user image">
-                    <!-- /.direct-chat-img -->
-                    <div class="direct-chat-text">
-                      I would love to.
-                    </div>
-                    <!-- /.direct-chat-text -->
-                  </div>
-                  <!-- /.direct-chat-msg -->
-
-                </div>
-                <!--/.direct-chat-messages-->
+            </li>
+            <li>
+                    <span class="handle">
+                      <i class="fa fa-ellipsis-v"></i>
+                      <i class="fa fa-ellipsis-v"></i>
+                    </span>
+              <input type="checkbox" value="" name="">
+              <span class="text">Haga que el tema responda</span>
+              <small class="badge badge-info"><i class="fa fa-clock-o"></i> 4 hours</small>
+              <div class="tools">
+                <i class="fa fa-edit"></i>
+                <i class="fa fa-trash-o"></i>
+              </div>
+            </li>
+            <li>
+                    <span class="handle">
+                      <i class="fa fa-ellipsis-v"></i>
+                      <i class="fa fa-ellipsis-v"></i>
+                    </span>
+              <input type="checkbox" value="" name="">
+              <span class="text">Deja que el tema brille como una estrella</span>
+              <small class="badge badge-warning"><i class="fa fa-clock-o"></i> 1 day</small>
+              <div class="tools">
+                <i class="fa fa-edit"></i>
+                <i class="fa fa-trash-o"></i>
+              </div>
+            </li>
+            <li>
+                    <span class="handle">
+                      <i class="fa fa-ellipsis-v"></i>
+                      <i class="fa fa-ellipsis-v"></i>
+                    </span>
+              <input type="checkbox" value="" name="">
+              <span class="text">Deja que el tema brille como una estrella</span>
+              <small class="badge badge-primary"><i class="fa fa-clock-o"></i> 1 week</small>
+              <div class="tools">
+                <i class="fa fa-edit"></i>
+                <i class="fa fa-trash-o"></i>
+              </div>
+            </li>
+            <li>
+                    <span class="handle">
+                      <i class="fa fa-ellipsis-v"></i>
+                      <i class="fa fa-ellipsis-v"></i>
+                    </span>
+              <input type="checkbox" value="" name="">
+              <span class="text">Aprobar trabajo final integrador</span>
+              <small class="badge badge-secondary"><i class="fa fa-clock-o"></i> 4 month</small>
+              <div class="tools">
+                <i class="fa fa-edit"></i>
+                <i class="fa fa-trash-o"></i>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer clearfix">
+          <button type="button" class="btn btn-info float-right"><i class="fa fa-plus"></i> Add item</button>
+        </div>
+      </div>
+      <!-- /.card -->
 
     </section>
 

@@ -26,9 +26,10 @@
   <!-- bootstrap wysihtml5 - text editor -->
   <link rel="stylesheet" href="../../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
   <!-- Google Font: Source Sans Pro -->
+
+  <link rel="stylesheet" href="../../plugins/daterangepicker/daterangepicker-bs3.css">
+
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-
-
 </head>
 <body class="hold-transition sidebar-mini">
 
@@ -193,9 +194,9 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="./editarPerfil.html" class="nav-link">
+                <a href="verPerfil.html" class="nav-link">
                   <i class="fa fa-circle-o nav-icon"></i>
-                  <p>Editar Perfil</p>
+                  <p>Ver Perfil</p>
                 </a>
               </li>
               <li class="nav-item">
@@ -266,97 +267,69 @@
 
     <!-- Main content -->
     <section class="content">
-
-
-
-            <!-- DIRECT CHAT -->
-            <div class="card direct-chat direct-chat-primary">
+      <!-- Main content -->
+      <section class="content">
+        <div class="container-fluid">
+        </div>
+        <div class="row">
+          <!-- left column -->
+          <div class="col-md-6">
+            <!-- general form elements -->
+            <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Chat</h3>
-
-                <div class="card-tools">
-                  <span data-toggle="tooltip" title="3 New Messages" class="badge badge-primary">3</span>
-                  <button type="button" class="btn btn-tool" data-widget="collapse">
-                    <i class="fa fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn btn-tool" data-toggle="tooltip" title="Contacts"
-                          data-widget="chat-pane-toggle">
-                    <i class="fa fa-comments"></i>
-                  </button>
-                  <button type="button" class="btn btn-tool" data-widget="remove"><i class="fa fa-times"></i>
-                  </button>
-                </div>
+                <h3 class="card-title">Crear Nuevo Grupo</h3>
               </div>
               <!-- /.card-header -->
-              <div class="card-body">
-                <!-- Conversations are loaded here -->
-                <div class="direct-chat-messages">
-                  <!-- Message. Default to the left -->
-                  <div class="direct-chat-msg">
-                    <div class="direct-chat-info clearfix">
-                      <span class="direct-chat-name float-left">Maxi Pierce</span>
-                      <span class="direct-chat-timestamp float-right">23 Jan 2:00 pm</span>
-                    </div>
-                    <!-- /.direct-chat-info -->
-                    <img class="direct-chat-img" src="/../../dist/img/user1-128x128.jpg" alt="message user image">
-                    <!-- /.direct-chat-img -->
-                    <div class="direct-chat-text">
-                      Estamos haciendo un grupo increible!
-                    </div>
-                    <!-- /.direct-chat-text -->
+              <!-- form start -->
+              <form role="form">
+                <div class="card-body">
+                  <div class="form-group">
+                    <label>Nombre de Grupo</label>
+                    <input type="text" class="form-control" placeholder="Ingrese ..." id="nickname">
                   </div>
-                  <!-- /.direct-chat-msg -->
-
-                  <!-- Message to the right -->
-                  <div class="direct-chat-msg right">
-                    <div class="direct-chat-info clearfix">
-                      <span class="direct-chat-name float-right">Sarah Bullock</span>
-                      <span class="direct-chat-timestamp float-left">23 Jan 2:05 pm</span>
-                    </div>
-                    <!-- /.direct-chat-info -->
-                    <img class="direct-chat-img" src="../../dist/img/user3-128x128.jpg" alt="message user image">
-                    <!-- /.direct-chat-img -->
-                    <div class="direct-chat-text">
-                      Es genial!
-                    </div>
-                    <!-- /.direct-chat-text -->
+                  <div class="form-group">
+                    <label>Seleccionar Materia</label>
+                    <select class="form-control">
+                      <option>Matematica</option>
+                      <option>Informatica</option>
+                      <option>Graficos 3D</option>
+                      <option>Cs Naturales</option>
+                      <option>Cs Sociales</option>
+                    </select>
                   </div>
-                  <!-- /.direct-chat-msg -->
-
-                  <!-- Message. Default to the left -->
-                  <div class="direct-chat-msg">
-                    <div class="direct-chat-info clearfix">
-                      <span class="direct-chat-name float-left">Alexander Pierce</span>
-                      <span class="direct-chat-timestamp float-right">23 Jan 5:37 pm</span>
-                    </div>
-                    <!-- /.direct-chat-info -->
-                    <img class="direct-chat-img" src="../../dist/img/user1-128x128.jpg" alt="message user image">
-                    <!-- /.direct-chat-img -->
-                    <div class="direct-chat-text">
-                      Sigamos trabajando duro! al final del cuatrimestre veremos los resultados
-                    </div>
-                    <!-- /.direct-chat-text -->
+                  <div class="form-group">
+                    <label>Disponibilidad</label>
+                    <select class="form-control">
+                      <option>Fulltime</option>
+                      <option>PartTime</option>
+                      <option>Freelance</option>
+                    </select>
                   </div>
-                  <!-- /.direct-chat-msg -->
+                  <div class="form-group">
+                    <label>Rango de fechas:</label>
 
-                  <!-- Message to the right -->
-                  <div class="direct-chat-msg right">
-                    <div class="direct-chat-info clearfix">
-                      <span class="direct-chat-name float-right">Sarah Bullock</span>
-                      <span class="direct-chat-timestamp float-left">23 Jan 6:10 pm</span>
+                    <div class="input-group">
+                      <button type="button" class="btn btn-default float-right" id="daterange-btn">
+                        <i class="fa fa-calendar"></i> Seleccione las fechas
+                        <i class="fa fa-caret-down"></i>
+                      </button>
                     </div>
-                    <!-- /.direct-chat-info -->
-                    <img class="direct-chat-img" src="../../dist/img/user3-128x128.jpg" alt="message user image">
-                    <!-- /.direct-chat-img -->
-                    <div class="direct-chat-text">
-                      I would love to.
-                    </div>
-                    <!-- /.direct-chat-text -->
                   </div>
-                  <!-- /.direct-chat-msg -->
 
+                  <!-- /.card-body -->
                 </div>
-                <!--/.direct-chat-messages-->
+                <div class="card-footer">
+                  <a id="btn-login" href="#" class="btn btn-primary" onclick="hacerAdmin()">Cancelar</a>
+                  <a id="btn-login2" href="#" class="btn btn-primary" onclick="hacerAlumno()">Crear</a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+  </div>
+
+
+
 
     </section>
 
@@ -424,6 +397,100 @@
     document.getElementById("myImgAvatar").src = obtenerObjStorageLocal("Usuario").photoURL;
     document.getElementById("displayName").innerHTML = obtenerObjStorageLocal("Usuario").displayName;
     console.log("fin");
+</script>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Select2 -->
+<script src="../../plugins/select2/select2.full.min.js"></script>
+<!-- InputMask -->
+<script src="../../plugins/input-mask/jquery.inputmask.js"></script>
+<script src="../../plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script src="../../plugins/input-mask/jquery.inputmask.extensions.js"></script>
+<!-- date-range-picker -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
+<script src="../../plugins/daterangepicker/daterangepicker.js"></script>
+<!-- bootstrap color picker -->
+<script src="../../plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
+<!-- bootstrap time picker -->
+<script src="../../plugins/timepicker/bootstrap-timepicker.min.js"></script>
+<!-- SlimScroll 1.3.0 -->
+<script src="../../plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- iCheck 1.0.1 -->
+<script src="../../plugins/iCheck/icheck.min.js"></script>
+<!-- FastClick -->
+<script src="../../plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="../../dist/js/demo.js"></script>
+<!-- Page script -->
+<script>
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2()
+
+        //Datemask dd/mm/yyyy
+        $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+        //Datemask2 mm/dd/yyyy
+        $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+        //Money Euro
+        $('[data-mask]').inputmask()
+
+        //Date range picker
+        $('#reservation').daterangepicker()
+        //Date range picker with time picker
+        $('#reservationtime').daterangepicker({
+            timePicker         : true,
+            timePickerIncrement: 30,
+            format             : 'MM/DD/YYYY h:mm A'
+        })
+        //Date range as a button
+        $('#daterange-btn').daterangepicker(
+            {
+                ranges   : {
+                    'Today'       : [moment(), moment()],
+                    'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month'  : [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                startDate: moment().subtract(29, 'days'),
+                endDate  : moment()
+            },
+            function (start, end) {
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+            }
+        )
+
+        //iCheck for checkbox and radio inputs
+        $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+            checkboxClass: 'icheckbox_minimal-blue',
+            radioClass   : 'iradio_minimal-blue'
+        })
+        //Red color scheme for iCheck
+        $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+            checkboxClass: 'icheckbox_minimal-red',
+            radioClass   : 'iradio_minimal-red'
+        })
+        //Flat red color scheme for iCheck
+        $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+            checkboxClass: 'icheckbox_flat-green',
+            radioClass   : 'iradio_flat-green'
+        })
+
+        //Colorpicker
+        $('.my-colorpicker1').colorpicker()
+        //color picker with addon
+        $('.my-colorpicker2').colorpicker()
+
+        //Timepicker
+        $('.timepicker').timepicker({
+            showInputs: false
+        })
+    })
 </script>
 </body>
 </html>
