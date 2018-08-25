@@ -461,7 +461,20 @@
     <!-- /.Left col -->
     <!-- right col (We are only adding the ID to make the widgets sortable)-->
     <div id="map" style="width:100%;height:400px;"></div>
+    <div class="col-sm-12"><table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+      <thead>
+      <tr role="row"><th class="sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending">Distancia a la Universidad</th><th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">Duracion del viaje manejando</th></tr>
+      </thead>
+      <tbody>
+      <tr role="row" class="odd">
+        <td class="sorting_1" id="dist1"></td>
+        <td id="dura1"></td>
+      </tr><tr role="row" class="even">
+        <td class="sorting_1" id="dist2"></td>
+        <td id="dura2"></td>
 
+      </tr></tbody>
+     </table></div>
     <!-- Calendar -->
     <div class="card bg-success-gradient">
       <div class="card-header no-border">
@@ -576,6 +589,7 @@
 
     console.log("fin");
 </script>
+
 <script>
     // Note: This example requires that you consent to location sharing when
     // prompted by your browser. If you see the error "The Geolocation service
@@ -584,8 +598,14 @@
     var map, infoWindow;
     function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: -34.397, lng: 150.644},
+            center: {lat: -34.7353219, lng: -58.39019880000001},
             zoom: 6
+        });
+        var myLatLng = {lat: -34.7353219, lng: -58.39019880000001};
+        var marker = new google.maps.Marker({
+            position: myLatLng,
+            map: map,
+            title: 'Universidad Nacional de Lanús'
         });
         infoWindow = new google.maps.InfoWindow;
 
@@ -601,6 +621,59 @@
                 infoWindow.setContent('Location found.');
                 infoWindow.open(map);
                 map.setCenter(pos);
+
+                var origin1 = new google.maps.LatLng(pos.lat,pos.lng);
+                var origin2 = 'Mi ubicacion';
+                var destinationA = 'Universidad';
+                var destinationB = new google.maps.LatLng( -34.7353219, -58.39019880000001);
+
+                var service = new google.maps.DistanceMatrixService();
+                service.getDistanceMatrix(
+                    {
+                        origins: [origin1, origin2],
+                        destinations: [destinationA, destinationB],
+                        travelMode: 'DRIVING'
+                    }, callback);
+
+                function callback(response, status) {
+                    if (status == 'OK') {
+                        var origins = response.originAddresses;
+                        var destinations = response.destinationAddresses;
+                        var primera=1;
+                        for (var i = 0; i < origins.length; i++) {
+                            var results = response.rows[i].elements;
+                            for (var j = 0; j < results.length; j++) {
+                                var element = results[j];
+                                if (results[j].status!="ZERO_RESULTS" && results[j].status!="NOT_FOUND" ){
+                                    if (primera==1){
+                                        document.getElementById("dist1").innerHTML=results[j].distance.text;
+                                        document.getElementById("dura1").innerHTML=results[j].duration.text;
+
+                                    }
+                                    if (primera==2){
+                                        document.getElementById("dist2").innerHTML=results[j].distance.text;
+                                        document.getElementById("dura2").innerHTML=results[j].duration.text;
+
+                                    }
+
+
+                                    //var distance = element.distance.text;
+                                    // var duration = element.duration.text;
+                                    var from = origins[i];
+                                    var to = destinations[j];
+                                    primera++;
+                                }
+
+
+                            }
+                        }
+                    }
+                }
+
+
+
+
+
             }, function() {
                 handleLocationError(true, infoWindow, map.getCenter());
             });
@@ -608,6 +681,7 @@
             // Browser doesn't support Geolocation
             handleLocationError(false, infoWindow, map.getCenter());
         }
+
     }
 
     function handleLocationError(browserHasGeolocation, infoWindow, pos) {
@@ -618,8 +692,8 @@
         infoWindow.open(map);
     }
 </script>
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIjjU3h0LkkmXri8FY1LqMkG1Kedc1OXY&callback=initMap">
-</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAflpKjWia8DWIeM1LJUrbOftd_XTWKL_A&callback=initMap"
+        type="text/javascript"></script>
+
 </body>
 </html>
