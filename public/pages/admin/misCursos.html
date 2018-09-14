@@ -4,7 +4,8 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Com1patible" content="IE=edge">
-  <title>NextGeneration 1.0</title>
+  <title>NextGeneration 1.0 | Bienvenidos</title>
+  <meta name="google-signin-client_id" content="966721066481-63hs0mn17nbdq54iug8fa2qnf0guoeag.apps.googleusercontent.com">
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Font Awesome -->
@@ -26,12 +27,89 @@
   <!-- bootstrap wysihtml5 - text editor -->
   <link rel="stylesheet" href="../../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
   <!-- Google Font: Source Sans Pro -->
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <script src="../../plugins/BlockUI/blockUI.js"></script>
+  <script src="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css" />
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-firestore.js"></script>
+  <style>
+
+    img {
+      width: 75%;
+      height: auto;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .loader {
+      border: 16px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 16px solid #3498db;
+      width: 120px;
+      height: 120px;
+      -webkit-animation: spin 2s linear infinite; /* Safari */
+      animation: spin 2s linear infinite;
+    }
+
+    /* Safari */
+    @-webkit-keyframes spin {
+      0% { -webkit-transform: rotate(0deg); }
+      100% { -webkit-transform: rotate(360deg); }
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    footer {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      background-color: #5caceb;
+      color: white;
+      text-align: center;
+
+    }
+  </style>
+  <script>
+
+      // Initialize Firebase
+      var config = {
+          apiKey: "AIzaSyBnSMz4K89aaghwVikqC2Mjktb9vxKr-wI",
+          authDomain: "nextgeneration-c55c3.firebaseapp.com",
+          databaseURL: "https://nextgeneration-c55c3.firebaseio.com",
+          projectId: "nextgeneration-c55c3",
+          storageBucket: "nextgeneration-c55c3.appspot.com",
+          messagingSenderId: "966721066481"
+      };
+      firebase.initializeApp(config);
+      window.fbAsyncInit = function() {
+          FB.init({
+              appId            : '1853124638088705',
+              autoLogAppEvents : true,
+              xfbml            : true,
+              version          : 'v3.0'
+          });
+      };
+      (function(d, s, id){
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) {return;}
+          js = d.createElement(s); js.id = id;
+          js.src = "https://connect.facebook.net/en_US/sdk.js";
+          fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+      var db = firebase.firestore();
+  </script>
 
 </head>
 <body class="hold-transition sidebar-mini">
-
 <div class="wrapper">
 
   <!-- Navbar -->
@@ -156,7 +234,6 @@
   </nav>
   <!-- /.navbar -->
 
-
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
@@ -199,33 +276,21 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="misCursos.html" class="nav-link">
+                <a href="misCursos.html" class="nav-link active">
                   <i class="fa fa-circle-o nav-icon"></i>
                   <p>Mis Cursos</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="buscarGrupo.html" class="nav-link">
+                <a href="promoverAdmin.html" class="nav-link">
                   <i class="fa fa-circle-o nav-icon"></i>
-                  <p>Buscar Grupo</p>
+                  <p>Gestion de Usuarios</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="crearGrupo.html" class="nav-link">
+                <a href="estadisticas.html" class="nav-link">
                   <i class="fa fa-circle-o nav-icon"></i>
-                  <p>Crear Grupo</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="calendario.html" class="nav-link active">
-                  <i class="fa fa-circle-o nav-icon"></i>
-                  <p>Calendario</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="trabajar.html" class="nav-link">
-                  <i class="fa fa-circle-o nav-icon"></i>
-                  <p>Trabajar</p>
+                  <p>Ver Estadisticas</p>
                 </a>
               </li>
               <li class="nav-item">
@@ -257,72 +322,153 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Calendario</h1>
+            <h1 class="m-0 text-dark">Mis Cursos</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Calendario</li>
+              <li class="breadcrumb-item active">Mis Cursos</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
+
       </div><!-- /.container-fluid -->
     </div>
-    <!-- /.content-header -->
+
 
     <!-- Main content -->
     <section class="content">
-
-
-
-      <div class="card bg-success-gradient">
-        <div class="card-header no-border">
-
-          <h3 class="card-title">
-            <i class="fa fa-calendar"></i>
-            Calendario
-          </h3>
-          <!-- tools card -->
-          <div class="card-tools">
-            <!-- button with a dropdown -->
-            <div class="btn-group">
-              <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
-                <i class="fa fa-bars"></i></button>
-              <div class="dropdown-menu float-right" role="menu">
-                <a href="#" class="dropdown-item">Add new event</a>
-                <a href="#" class="dropdown-item">Clear events</a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">View calendar</a>
-              </div>
-            </div>
-            <button type="button" class="btn btn-success btn-sm" data-widget="collapse">
-              <i class="fa fa-minus"></i>
-            </button>
-            <button type="button" class="btn btn-success btn-sm" data-widget="remove">
-              <i class="fa fa-times"></i>
-            </button>
-          </div>
-          <!-- /. tools -->
-        </div>
-        <!-- /.card-header -->
-        <div class="card-body p-0">
-          <!--The calendar -->
-          <div id="calendar" style="width: 100%"></div>
-        </div>
-        <!-- /.card-body -->
+      <div class="container-fluid">
       </div>
-      <!-- /.card -->
+      <div class="row">
+        <!-- left column -->
+        <div class="col-md-6">
+          <!-- general form elements -->
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title"></h3>
 
-    </section>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form role="form">
 
-    <!-- /.content -->
+                    <div class="card-header">
+                      <h3 class="card-title">Cuatrimestre actual</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                      <table class="table table-bordered">
+                        <tbody><tr>
+                          <th style="width: 10px">#</th>
+                          <th>Materia</th>
+                          <th>Estado</th>
+                          <th>Año</th>
+                          <th>Alumnos Aprobados</th>
+                          <th>Alumnos Aprobados</th>
+                          <th>Rubrica</th>
+                        </tr>
+                        <tr>
+                          <td>1.</td>
+                          <td>Matematica</td>
+                          <td><span class="badge bg-success">Iniciada</span></td>
+                          <td>8°</td>
+                          <td><span class="badge bg-warning">60%</span></td>
+                          <td><span class="badge bg-danger">40%</span></td>
+                          <td>
+                            <button type="button" class="btn btn-success float-right"><i class="fa fa-credit-card"></i> Subir Rubrica
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>2.</td>
+                          <td>Ciencias Sociales</td>
+                          <td><span class="badge bg-success">Iniciada</span></td>
+                          <td>8°</td>
+                          <td><span class="badge bg-success">70%</span></td>
+                          <td><span class="badge bg-warning">30%</span></td>
+                          <td>
+                            <button type="button" class="btn btn-success float-right"><i class="fa fa-credit-card"></i> Subir Rubrica
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>3.</td>
+                          <td>Filosofia</td>
+                          <td><span class="badge bg-primary">Suspendido</span></td>
+                           <td></td>
+                          <td></td>
+                          <td></td>
+                          <td>
+                            <button type="button" class="btn btn-success float-right"><i class="fa fa-credit-card"></i> Subir Rubrica
+                            </button>
+                          </td>
+                        </tr>
+                        </tr>
+                        <tr>
+                          <td>4.</td>
+                          <td>Lengua</td>
+                          <td><span class="badge bg-success">Iniciada</span></td>
+                          <td>6°</td>
+                          <td><span class="badge bg-success">90%</span></td>
+                          <td><span class="badge bg-success">10%</span></td>
+                          <td>
+                            <button type="button" class="btn btn-success float-right"><i class="fa fa-credit-card"></i> Subir Rubrica
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td>
+                          <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
+                            <i class="fa fa-download"></i> Generate reporte PDF
+                          </button>
+                            </td>
+                        </tr>
+
+
+
+                        </tbody></table>
+
+                    </div>
+
+                    <!-- /.card-body -->
+                    <div class="card-footer clearfix">
+                      <ul class="pagination pagination-sm m-0 float-right">
+                        <li class="page-item"><a class="page-link" href="#">«</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">»</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- /.card-body -->
+              </div>
+
+            </form>
+
+          </div>
+        </div>
+
+      </div>
   </div>
-  <!-- /.content-wrapper -->
+  </section>
+
+
+
   <footer class="main-footer">
-    <strong>Copyright &copy; 2018 -Maximiliano Axel Capará</a>.</strong>
+    <strong>Copyright &copy; 2018 -Maximiliano Axel Capará.</strong>
     All rights reserved.
     <div class="float-right d-none d-sm-inline-block">
-      <b>Version</b> 1.0</br>
+      <b>Version</b> 1.0
     </div>
   </footer>
 
@@ -334,13 +480,51 @@
 </div>
 <!-- ./wrapper -->
 
-<!-- jQuery -->
-<script src="../../plugins/jquery/jquery.min.js"></script>
-<!-- jQuery UI 1.11.4 -->
+
+<script>
+
+    function obtenerObjStorageLocal(x){
+        var myObj= JSON.parse(localStorage.getItem(x));
+        return myObj;
+    }
+    document.getElementById("myImgAvatar").src = obtenerObjStorageLocal("Usuario").photoURL;
+    document.getElementById("displayName").innerHTML = obtenerObjStorageLocal("Usuario").displayName;
+    console.log("fin");
+    function hacerAdmin() {
+           nickname=document.getElementById("nickname").value;
+           var stringJsonUser = {
+               rol: "admin"
+           };
+           db.collection("Usuarios").doc(nickname).update(stringJsonUser)
+               .then(function(docRef) {
+                   console.log("Document written with ID: ", docRef);
+                   pushNotification(nickname + " Ahora es Admin");
+               })
+               .catch(function(error) {
+                   console.error("Error adding document: ", error);
+                   pushNotification("Error adding document: ", error);
+               });
+    }
+    function hacerAlumno() {
+        nickname=document.getElementById("nickname").value;
+        var stringJsonUser = {
+            rol: "user"
+        };
+        db.collection("Usuarios").doc(nickname).update(stringJsonUser)
+            .then(function(docRef) {
+                console.log("Document written with ID: ", docRef);
+                pushNotification(nickname + " Ahora es Alumno");
+            })
+            .catch(function(error) {
+                console.error("Error adding document: ", error);
+                pushNotification("Error adding document: ", error);
+            });
+    }
+</script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
-  $.widget.bridge('uibutton', $.ui.button)
+    $.widget.bridge('uibutton', $.ui.button)
 </script>
 <!-- Bootstrap 4 -->
 <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -371,14 +555,6 @@
 <script src="../../dist/js/pages/dashboard.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="../../dist/js/demo.js"></script>
-<script>
-    function obtenerObjStorageLocal(x){
-        var myObj= JSON.parse(localStorage.getItem(x));
-        return myObj;
-    }
-    document.getElementById("myImgAvatar").src = obtenerObjStorageLocal("Usuario").photoURL;
-    document.getElementById("displayName").innerHTML = obtenerObjStorageLocal("Usuario").displayName;
-    console.log("fin");
-</script>
 </body>
+
 </html>
